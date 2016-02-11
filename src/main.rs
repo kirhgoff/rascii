@@ -13,7 +13,7 @@ fn main() {
     println!("{:?}", img.color());
 
     let (width, height) = img.dimensions();
-    let ascii_width = 30;
+    let ascii_width = 40;
     let ascii_height = ascii_width * height / width;
     let cell_width = width / ascii_width;
     let cell_height = height / ascii_height;
@@ -21,8 +21,8 @@ fn main() {
     let mut sums:Vec<i32> = Vec::new();
 
     //Iterate over every cell
-    for row in 0..ascii_width {
-      for column in 0..ascii_height {
+    for column in 0..ascii_height {
+      for row in 0..ascii_width {
         let mut current:i32 = 0;
         for x in (row*cell_width)..((row+1)*cell_width) {
           for y in (column*cell_height)..((column + 1)*cell_height) {
@@ -37,14 +37,30 @@ fn main() {
     //Normalize
     let mut min = std::i32::MAX;
     let mut max = std::i32::MIN;
-    for x in sums {
-      if x < min {
-        min = x;
+    for x in &sums {
+      if *x < min {
+        min = *x;
       }
-      if x > max {
-        max = x;   
+      if *x > max {
+        max = *x;   
       }
     }
+
+    //Print symbols
+    let spread = max - min;
+    let mut counter = 0;
+    for x in &sums {
+      let value = x - min;
+      let percentage = value as f32/spread as f32;
+      match percentage {
+        r if r < 0.5 => print!("#"),
+        _ => print!(" ")
+      }
+      if counter % ascii_width == 0 {
+        print!("\n");
+      }
+      counter += 1;
+    } 
 
     println!("Done!");
 }
