@@ -2,11 +2,13 @@ extern crate image;
 
 use std::path::Path;
 use std::vec::Vec;
+use std::env;
 
 use image::GenericImage;
 
 fn main() {
-    let img = image::open(&Path::new("test.jpg")).unwrap();
+    let path = env::args().nth(1).unwrap();
+    let img = image::open(&Path::new(&path)).unwrap();
     let img = img.grayscale();
 
     println!("dimensions {:?}", img.dimensions());
@@ -14,7 +16,7 @@ fn main() {
 
     let (width, height) = img.dimensions();
     let ascii_width = 40;
-    let ascii_height = ascii_width * height / width;
+    let ascii_height = ascii_width * height / (width as f32 * 1.8).round() as u32;
     let cell_width = width / ascii_width;
     let cell_height = height / ascii_height;
 
@@ -62,7 +64,7 @@ fn main() {
       counter += 1;
     } 
 
-    println!("Done!");
+    println!("\nDone!");
 }
 
 
