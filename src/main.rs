@@ -16,7 +16,7 @@ fn main() {
     let console_ratio = 1.8;
 
     println!("-----------------------------------------------------");
-    println!("rascii - ascii image converter v1.0");
+    println!("rascii - ascii image converter v2.0");
     println!("-----------------------------------------------------");
 
     //Load source image
@@ -46,9 +46,9 @@ fn main() {
     for column in 0..ascii_height {
       for row in 0..ascii_width {
         let mut best_char = 0;
-        let mut max_weight = std::i32::MIN;
-        let mut current:i32 = 0;
+        let mut weight = std::i32::MAX;
         for index in 0..ascii_count {
+          let mut current:i32 = 0;
 
           let x_shift = row*cell_width;
           let y_shift = column*cell_height;
@@ -58,12 +58,12 @@ fn main() {
 
               let source_pixel = img.get_pixel(x, y);
               let char_pixel = ascii_map.get_pixel(x - x_shift, index*cell_height + y - y_shift);
-              current += char_pixel.data[0] as i32 - source_pixel.data[0] as i32;
+              current += (char_pixel.data[0] as i32 - source_pixel.data[0] as i32).abs();
 
             }
           }
-          if current > max_weight {
-            max_weight = current;
+          if current < weight {
+            weight = current;
             best_char = index;
           }
         }
@@ -72,7 +72,7 @@ fn main() {
     }
 
     println!("-----------------------------------------------------");
-    let mut counter = 0;
+    let mut counter = 1;
     for x in &ascii {
       print!("{}", char::from_u32(*x).unwrap().to_string());
       if counter % ascii_width == 0 {
