@@ -26,6 +26,28 @@ pub struct SlicedImage {
 	pub rows: u32
 }
 
+pub struct AsciiMap {
+	slices: SlicedImage,
+	char_start: u8,
+	char_end: u8
+}
+
+pub trait MatchingStrategy {
+
+}
+
+impl AsciiMap {
+	pub fn new(slices:&SlicedImage, char_start:u8, char_end:u8) -> AsciiMap {
+		AsciiMap {
+			slices: slices, char_start: char_start, char_end: char_end
+		}
+	}
+
+	pub fn char_for_slice (slice: &Slice, strategy: &MatchingStrategy) -> u8 {
+		
+	}
+}
+
 impl SlicedImage {
 	pub fn new_source(img: &DynamicImage, cols:u32) -> SlicedImage {
 		let (width, height) = img.dimensions();
