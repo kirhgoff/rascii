@@ -1,46 +1,49 @@
+mod rascii;
+
 extern crate image;
 
 use std::path::Path;
-use std::vec::Vec;
+//use std::vec::Vec;
 use std::env;
-use std::char;
+//use std::char;
 
 use image::GenericImage;
 use image::FilterType;
+
+//use rascii::Slice;
+use rascii::SlicedImage;
 
 fn main() {
     //Some constants
     let ascii_start = 32;
     let ascii_end = 126;
     let ascii_count = ascii_end - ascii_start;
-    let console_ratio = 1.8;
+    let ascii_width = 40;
 
     println!("-----------------------------------------------------");
     println!("rascii - ascii image converter v2.0");
     println!("-----------------------------------------------------");
 
-    //Load source image
+    //Slice source image
     let path = env::args().nth(1).unwrap();
     let img = image::open(&Path::new(&path)).unwrap().grayscale();
+    let source_sliced = SlicedImage::new_source(&img, ascii_width);
 
-    let (width, height) = img.dimensions();
-    let ascii_width = 40;
-    let ascii_height = ascii_width * height / (width as f32 * console_ratio).round() as u32;
-    let cell_width = width / ascii_width;
-    let cell_height = height / ascii_height;
-
-    //Resize ascii map to match the cell size
+    //Slice ascii map
     let ascii_map = image::open(&Path::new("asciimap.png")).unwrap().grayscale();
-    let (map_width, map_height) = ascii_map.dimensions();
-    let ascii_map = ascii_map.resize_exact(cell_width, cell_height*ascii_count, FilterType::Triangle);
+    let ascii_map = ascii_map.resize_exact(
+      source_sliced.slice_width, 
+      source_sliced.slice_height*ascii_count, 
+      FilterType::Triangle
+    );
+    let ascii_sliced = SlicedImage::new(&ascii_map, 1, ascii_count);
     
-    println!("original image size ({}, {})", width, height);
-    println!("ascii map size ({}, {})", map_width, map_height);
-    println!("cell size ({}, {})", cell_width, cell_height);
-    println!("resizing ascii map to ({}, {})", cell_width, cell_height*ascii_count);
+    println!("original image size ({}, {})", source_sliced.width, source_sliced.height);
+    println!("image slice size ({}, {})", source_sliced.slice_width, source_sliced.slice_height);
+    println!("ascii map size ({}, {})", ascii_sliced.width, ascii_sliced.height);
+    println!("ascii slice size ({}, {})", ascii_sliced.slice_width, ascii_sliced.slice_height);
 
-
-    let mut ascii:Vec<u32> = Vec::new();
+/*    let mut ascii:Vec<u32> = Vec::new();
 
     //Iterate over every cell
     for column in 0..ascii_height {
@@ -81,6 +84,7 @@ fn main() {
       counter += 1;
     } 
     println!("\n-----------------------------------------------------");
+    */
     println!("Done!");
 }
 
