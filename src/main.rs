@@ -40,8 +40,8 @@ fn main() {
       FilterType::Triangle
     );
     let ascii_sliced = SlicedImage::new(&ascii_map_image, 1, ascii_count as u32);
-    let ascii_map = AsciiMap::new(ascii_sliced, ascii_start, ascii_end);
-    let strategy = AsciiMapStrategy::new(ascii_map);
+    let ascii_map = AsciiMap::new(&ascii_sliced, ascii_start, ascii_end);
+    let strategy = AsciiMapStrategy::new(&ascii_map);
     
     println!("original image size ({}, {})", source_sliced.width, source_sliced.height);
     println!("image slice size ({}, {})", source_sliced.slice_width, source_sliced.slice_height);

@@ -25,12 +25,12 @@ impl MatchingStrategy for AsciiMapStrategy {
 }
 */
 pub struct AsciiMapStrategy {
-	ascii_map: AsciiMap,
+	ascii_map: &AsciiMap,
 	//normalized: Vec<Vec<f32>>
 }
 
 impl AsciiMapStrategy {
-	pub fn new(ascii_map: AsciiMap) -> AsciiMapStrategy {
+	pub fn new(ascii_map: &AsciiMap) -> AsciiMapStrategy {
 		AsciiMapStrategy {ascii_map: ascii_map}
 	}
 
@@ -49,13 +49,13 @@ impl AsciiMapStrategy {
 //------------------------ Ascii Map ---------------------------
 
 pub struct AsciiMap {
-	slices: SlicedImage,
+	slices: &SlicedImage,
 	char_start: u8,
 	char_end: u8
 }
 
 impl AsciiMap {
-	pub fn new(slices:SlicedImage, char_start:u8, char_end:u8) -> AsciiMap {
+	pub fn new(slices:&SlicedImage, char_start:u8, char_end:u8) -> AsciiMap {
 		AsciiMap {
 			slices: slices, char_start: char_start, char_end: char_end
 		}
@@ -149,12 +149,12 @@ impl SlicedImage {
 }
 
 fn min_max (slices:&Vec<Slice>) -> (u8, u8) {
-	slices.iter().flat_map(|slice|slice.dots)
+	slices.iter().flat_map(|slice|&slice.dots)
 		.fold((u8::MAX, u8::MIN), |(min, max), value| {
-			let mut new_min = min;
-			let mut new_max = max;
-			if value < min {new_min = value;}
-			if value > max {new_max = value;}
-			(new_min, new_max)
+			let mut new_min = &min;
+			let mut new_max = &max;
+			if value < &min {new_min = value;}
+			if value > &max {new_max = value;}
+			(*new_min, *new_max)
 		})
 }
