@@ -18,12 +18,12 @@ use rascii::AsciiMapStrategy;
 
 fn main() {
     //Constants
-    let ascii_start:u8 = 32; //Start from space
+    let ascii_start:u8 = 33; //Start from space
     let ascii_end:u8 = 126; //to the last printable char
-    let ascii_width = 40;
+    let ascii_width = 80;
 
     println!("-----------------------------------------------------");
-    println!("rascii - ascii image converter v2.0");
+    println!("rascii - ascii image converter v3.0");
     println!("-----------------------------------------------------");
 
     //Slice source image
@@ -36,7 +36,7 @@ fn main() {
     let ascii_map_image = image::open(&Path::new("asciimap.png")).unwrap().grayscale();
     let ascii_map_image = ascii_map_image.resize_exact(
       source_sliced.slice_width, 
-      source_sliced.slice_height*ascii_count as u32, 
+      source_sliced.slice_height * ascii_count as u32, 
       FilterType::Triangle
     );
     let ascii_sliced = SlicedImage::new(&ascii_map_image, 1, ascii_count as u32);
